@@ -7,4 +7,7 @@
       "ejs":"*",
       "coffee-script":"*"
   }
+  , "scripts" : {
+    "start" : "coffee server.coffee"
+  }
 }
