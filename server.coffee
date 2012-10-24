@@ -25,4 +25,4 @@ io.sockets.on 'connection', (socket) ->
 
   socket.on "volume", (text) -> controls.volume.set_volume text, socket
   socket.on "pause", controls.pause
-  socket.on "pause", controls.play
+  socket.on "play", controls.play
