@@ -26,6 +26,10 @@
         $('#restore').hide()
         $('#pause').hide()
 
+        socket.on('play-pause', function(){
+          $('#pause, #play').toggle()
+        })
+
         socket.on('set-volume', function(text){
           $("#volume").text(text + '%')
           var volume = parseInt(text)
@@ -44,8 +48,6 @@
         $('#pause, #play').click(function(event){
           event.stopPropagation();
           event.preventDefault();
-          $('#pause, #play').toggle()
-          console.log($(this).attr('id'))
           socket.emit($(this).attr('id'));
         })
 
@@ -77,7 +79,7 @@
          <b id="volume"><%= volume %>%</b>
          <h6>Volume</h6>
         </div>
-        <div class="span8">
+        <div class="span3">
           <div class="btn-group">
             <a id="minus" class="btn volume-trigger" data-volume="<%=volume - 5%>">-5</a>
             <a id="restore" class="btn volume-trigger" data-volume="<%= volume %>">Restore</a>
@@ -86,6 +88,8 @@
           </div>
         </div>
       </div>
+
+      <hr/>
 
       <div class="row">
         <div class="span2">

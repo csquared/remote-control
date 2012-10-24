@@ -23,6 +23,18 @@ io     = sio.listen(server)
 io.sockets.on 'connection', (socket) ->
   console.log 'Someone Connected'
 
-  socket.on "volume", (text) -> controls.volume.set_volume text, socket
-  socket.on "pause", controls.pause
-  socket.on "play", controls.play
+  emit_all = (channel, text = null) ->
+    socket.emit(channel, text)
+    socket.broadcast.emit(channel, text)
+
+  socket.on "volume", (text) ->
+    controls.volume.set_volume text
+    emit_all 'set-volume', text
+
+  socket.on "pause", () ->
+    controls.pause()
+    emit_all 'play-pause'
+
+  socket.on "play", () ->
+    controls.play()
+    emit_all 'play-pause'
