@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Remote Control</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" / >
       <!-- Le styles -->
     <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -9,6 +10,11 @@
       }
     </style>
     <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <style>
+      #volume{
+        font-size: 2.5em;
+      }
+    </style>
     <script src="/jquery-1.8.2.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
@@ -16,14 +22,34 @@
       $(function(){
         socket = io.connect();
 
+        var restore_to_volume = 50;
+        $('#restore').hide()
+        $('#pause').hide()
+
         socket.on('set-volume', function(text){
-          $("#volume").text(text)
+          $("#volume").text(text + '%')
           var volume = parseInt(text)
+          if(volume == 0){
+            $('#restore').show().attr('data-volume', restore_to_volume);
+            $('#mute').hide()
+          }else{
+            $('#restore').hide()
+            $('#mute').show()
+          }
+          restore_to_volume = volume;
           $("#plus").attr('data-volume', volume + 5)
           $("#minus").attr('data-volume', volume - 5)
         })
 
-        $('a.plus_minus').click(function(event){
+        $('#pause, #play').click(function(event){
+          event.stopPropagation();
+          event.preventDefault();
+          $('#pause, #play').toggle()
+          console.log($(this).attr('id'))
+          socket.emit($(this).attr('id'));
+        })
+
+        $('.volume-trigger').click(function(event){
           event.stopPropagation();
           event.preventDefault();
           socket.emit('volume', $(this).attr('data-volume'));
@@ -36,28 +62,37 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#">Remote Control</a>
+          <div class="row">
+            <div class="span5">
+              <a class="brand" href="#">Remote Control</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="container">
-
-      <h1 id="volume"><%= volume %></h1>
-      <form action="/set">
-        <div class="btn-group">
-          <a id="minus" class="btn plus_minus" data-volume="<%=volume - 5%>">-5</a>
-          <a id="plus" class="btn plus_minus" data-volume="<%=volume + 5%>">+5</a>
+      <div class="row">
+        <div class="span2">
+         <b id="volume"><%= volume %>%</b>
+         <h6>Volume</h6>
         </div>
-        <br/>
-        <hr/>
-        <input type="text" name="volume" size="5"></input>
-        <br/>
-        <button type="submit">Set Volume</button>
-      </form>
+        <div class="span8">
+          <div class="btn-group">
+            <a id="minus" class="btn volume-trigger" data-volume="<%=volume - 5%>">-5</a>
+            <a id="restore" class="btn volume-trigger" data-volume="<%= volume %>">Restore</a>
+            <a id="mute" class="btn volume-trigger" data-volume="0">Mute</a>
+            <a id="plus" class="btn volume-trigger" data-volume="<%=volume + 5%>">+5</a>
+          </div>
+        </div>
+      </div>
 
-
-
+      <div class="row">
+        <div class="span2">
+          <a id="pause" class="btn" >Pause Rdio</a>
+          <a id="play"  class="btn" >Play Rdio</a>
+        </div>
+      </div>
     </div> <!-- /container -->
 
   </body>
