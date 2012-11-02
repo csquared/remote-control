@@ -14,4 +14,4 @@ Run it on the computer you are using to watch streaming video.  Point your brows
 
 ## UI
 
-  <img src="http://f.cl.ly/items/2u1f210n1v3V3U3H2j0q/Screen%20Shot%202012-10-15%20at%203.52.14%20PM.png" />
+  <img src="http://f.cl.ly/items/3N23271u3k3M321R302H/Screen%20Shot%202012-11-02%20at%201.20.57%20PM.png" />
