@@ -17,48 +17,11 @@
     </style>
     <script src="/jquery-1.8.2.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-
     <script>
-      $(function(){
-        socket = io.connect();
-
-        var restore_to_volume = 50;
-        $('#restore').hide()
-        $('#pause').hide()
-
-        socket.on('play-pause', function(){
-          $('#pause, #play').toggle()
-        })
-
-        socket.on('set-volume', function(text){
-          $("#volume").text(text + '%')
-          var volume = parseInt(text)
-          if(volume == 0){
-            $('#restore').show().attr('data-volume', restore_to_volume);
-            $('#mute').hide()
-          }else{
-            $('#restore').hide()
-            $('#mute').show()
-          }
-          restore_to_volume = volume;
-          $("#plus").attr('data-volume', volume + 5)
-          $("#minus").attr('data-volume', volume - 5)
-        })
-
-        $('#pause, #play').click(function(event){
-          event.stopPropagation();
-          event.preventDefault();
-          socket.emit($(this).attr('id'));
-        })
-
-        $('.volume-trigger').click(function(event){
-          event.stopPropagation();
-          event.preventDefault();
-          socket.emit('volume', $(this).attr('data-volume'));
-        })
-      })
-
+      rdio_state = <%= rdio_state %>
+      quicktime_state = <%= quicktime_state %>
     </script>
+    <script src="/remote_control.js"></script>
   </head>
   <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
@@ -93,8 +56,24 @@
 
       <div class="row">
         <div class="span2">
-          <a id="pause" class="btn" >Pause Rdio</a>
-          <a id="play"  class="btn" >Play Rdio</a>
+          <h4>Rdio</h6>
+        </div>
+        <div class="span2">
+          <a id="pause-rdio" class="btn toggle-id" >Pause</a>
+          <a id="play-rdio"  class="btn toggle-id" >Play</a>
+        </div>
+      </div>
+
+      <hr/>
+
+
+      <div class="row">
+        <div class="span2">
+          <h4>Quicktime</h6>
+        </div>
+        <div class="span2">
+          <a id="pause-quicktime" data-app="quicktime" class="btn toggle-app" >Pause</a>
+          <a id="play-quicktime"  data-app="quicktime" class="btn toggle-app" >Play</a>
         </div>
       </div>
     </div> <!-- /container -->
